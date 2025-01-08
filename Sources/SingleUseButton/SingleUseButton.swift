@@ -177,22 +177,21 @@ struct SingleUseToggleButtonStyle: ToggleStyle {
         ) {
             print("bookmark button was pressed")
         }
-        .foregroundStyle(Color.accentColor)
-        .font(.largeTitle)
-        
-        SingleUseButton(actionTitle: "Where Am I?", actionImageName: "location.magnifyingglass", finishedTitle: "I am here", finishedImageName: "globe",
-                        shape: Capsule()) {
+
+        SingleUseButton(
+            actionTitle: "Find My Location",
+            actionImageName: "location.magnifyingglass",
+            finishedTitle: "Location Found",
+            finishedImageName: "globe",
+            shape: Capsule()
+        ) {
             print("bookmark button was pressed")
         }
-        .foregroundStyle(Color.accentColor)
-        .font(.largeTitle)
-        
-        SingleUseButton(actionTitle: "Who's your Daddy?", actionImageName: "questionmark", finishedTitle: "me", finishedImageName: "person") {
+
+        SingleUseButton(actionTitle: "Who's your Daddy?", actionImageName: "questionmark", finishedTitle: "I am", finishedImageName: "person") {
             print("bookmark button was pressed")
         }
-        .foregroundStyle(Color.accentColor)
-        .font(.largeTitle)
-        
+
         SingleUseButton(
             actionTitle: "What time is it?",
             finishedTitle: "4:30") {
