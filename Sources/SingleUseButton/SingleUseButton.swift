@@ -16,7 +16,7 @@ import SwiftUI
 /// If it's tapped a second time, it just animates to show that it was tapped.
 /// Its action is not triggered again.
 @available(iOS 15.0, macOS 14.0, *)
-struct SingleUseButton<ButtonShape: Shape>: View {
+public struct SingleUseButton<ButtonShape: Shape>: View {
     
     let actionTitle: String
     let actionImageName: String
@@ -39,7 +39,7 @@ struct SingleUseButton<ButtonShape: Shape>: View {
     ///   - finishedImageName: the name of the system image after the button is pressed, defaults to empty string
     ///   - shape: the border shape of the button before it's pressed (after it's pressed there's no border)
     ///   - action: the action that runs when the button is pressed
-    init(
+    public init(
         actionTitle: String,
         actionImageName: String = "",
         finishedTitle: String,
@@ -70,7 +70,7 @@ struct SingleUseButton<ButtonShape: Shape>: View {
         #endif
     }
     
-    var body: some View {
+    public var body: some View {
         Toggle(isOn: $trigger) {
             Label {
                 ZStack(alignment: .leading) {
@@ -131,7 +131,7 @@ struct SingleUseButton<ButtonShape: Shape>: View {
 }
 
 @available(iOS 15.0, macOS 14.0, *)
-extension SingleUseButton where ButtonShape == ButtonBorderShape {
+public extension SingleUseButton where ButtonShape == ButtonBorderShape {
 
     /// Create a SingleUseButton
     /// - Parameters:
