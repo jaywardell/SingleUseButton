@@ -24,16 +24,31 @@ struct SingleUseButton<ButtonShape: Shape>: View {
     let finishedTitle: String
     let finishedImageName: String
         
-    let finishedAction: () -> Void
+    let action: () -> Void
     
     let buttonShape: ButtonShape
     
-    init(actionTitle: String, actionImageName: String, finishedTitle: String, finishedImageName: String, shape: ButtonShape, finishedAction: @escaping () -> Void) {
+    /// Create a SingleUseButton
+    /// - Parameters:
+    ///   - actionTitle: the title of the button before it's pressed
+    ///   - actionImageName: the name of the system image before the button is pressed, defaults to empty string
+    ///   - finishedTitle: the title of the button after it's pressed
+    ///   - finishedImageName: the name of the system image after the button is pressed, defaults to empty string
+    ///   - shape: the border shape of the button before it's pressed (after it's pressed there's no border)
+    ///   - action: the action that runs when the button is pressed
+    init(
+        actionTitle: String,
+        actionImageName: String = "",
+        finishedTitle: String,
+        finishedImageName: String = "",
+        shape: ButtonShape,
+        finishedAction: @escaping () -> Void
+    ) {
         self.actionTitle = actionTitle
         self.actionImageName = actionImageName
         self.finishedTitle = finishedTitle
         self.finishedImageName = finishedImageName
-        self.finishedAction = finishedAction
+        self.action = finishedAction
         self.buttonShape = shape
     }
     
@@ -101,7 +116,7 @@ struct SingleUseButton<ButtonShape: Shape>: View {
                 trigger = true
                 return
             }
-            finishedAction()
+            action()
             withAnimation {
                 hasBeenTriggered = true
             }
@@ -112,12 +127,27 @@ struct SingleUseButton<ButtonShape: Shape>: View {
 
 @available(iOS 15.0, macOS 14.0, *)
 extension SingleUseButton where ButtonShape == ButtonBorderShape {
-    init(actionTitle: String, actionImageName: String, finishedTitle: String, finishedImageName: String, finishedAction: @escaping () -> Void) {
+
+    /// Create a SingleUseButton
+    /// - Parameters:
+    ///   - actionTitle: the title of the button before it's pressed
+    ///   - actionImageName: the name of the system image before the button is pressed, defaults to empty string
+    ///   - finishedTitle: the title of the button after it's pressed
+    ///   - finishedImageName: the name of the system image after the button is pressed, defaults to empty string
+    ///   - shape: the border shape of the button before it's pressed (after it's pressed there's no border)
+    ///   - action: the action that runs when the button is pressed
+    init(
+        actionTitle: String,
+        actionImageName: String = "",
+        finishedTitle: String,
+        finishedImageName: String = "",
+        finishedAction: @escaping () -> Void
+    ) {
         self.actionTitle = actionTitle
         self.actionImageName = actionImageName
         self.finishedTitle = finishedTitle
         self.finishedImageName = finishedImageName
-        self.finishedAction = finishedAction
+        self.action = finishedAction
         self.buttonShape = .buttonBorder
     }
 }
@@ -164,7 +194,9 @@ struct SingleUseToggleButtonStyle: ToggleStyle {
         .foregroundStyle(Color.accentColor)
         .font(.largeTitle)
         
-        SingleUseButton(actionTitle: "What time is it?", actionImageName: "", finishedTitle: "4:30", finishedImageName: "") {
+        SingleUseButton(
+            actionTitle: "What time is it?",
+            finishedTitle: "4:30") {
             print("bookmark button was pressed")
         }
         .foregroundStyle(Color.accentColor)
