@@ -203,6 +203,6 @@ struct SingleUseToggleButtonStyle: ToggleStyle {
         .font(.largeTitle)
         
     }
-    .padding(.vertical)
+    .padding()
 }
 
