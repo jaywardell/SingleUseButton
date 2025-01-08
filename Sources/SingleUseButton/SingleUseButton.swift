@@ -83,7 +83,6 @@ struct SingleUseButton<ButtonShape: Shape>: View {
                 Image(systemName: trigger ? finishedImageName: actionImageName)
             }
         }
-        .padding(.horizontal)
         
         .toggleStyle(SingleUseToggleButtonStyle())
         .foregroundStyle(
@@ -188,7 +187,7 @@ struct SingleUseToggleButtonStyle: ToggleStyle {
         .foregroundStyle(Color.accentColor)
         .font(.largeTitle)
         
-        SingleUseButton(actionTitle: "Who's your Daddy?", actionImageName: "location.magnifyingglass", finishedTitle: "me", finishedImageName: "globe") {
+        SingleUseButton(actionTitle: "Who's your Daddy?", actionImageName: "questionmark", finishedTitle: "me", finishedImageName: "person") {
             print("bookmark button was pressed")
         }
         .foregroundStyle(Color.accentColor)
@@ -203,6 +202,8 @@ struct SingleUseToggleButtonStyle: ToggleStyle {
         .font(.largeTitle)
         
     }
+    #if os(macOS)
     .padding()
+    #endif
 }
 
