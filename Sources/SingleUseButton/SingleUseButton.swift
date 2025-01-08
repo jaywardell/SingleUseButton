@@ -1,2 +1,176 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+//
+//  SingleUseButton.swift
+//  SFSymbols In Toolbar Tests
+//
+//  Created by Joseph Wardell on 1/4/25.
+//
+
+import SwiftUI
+
+/// A button that presents the user with the option to do something once.
+///
+/// Before the button has been tapped, it presents itself as a button.
+/// When it's tapped, it animates a change between its images and its background.
+/// After it's been tapped, it presents itself as a label colored in the accent color.
+///
+/// If it's tapped a second time, it just animates to show that it was tapped.
+/// Its action is not triggered again.
+@available(iOS 15.0, macOS 14.0, *)
+struct SingleUseButton<ButtonShape: Shape>: View {
+    
+    let actionTitle: String
+    let actionImageName: String
+    
+    let finishedTitle: String
+    let finishedImageName: String
+        
+    let finishedAction: () -> Void
+    
+    let buttonShape: ButtonShape
+    
+    init(actionTitle: String, actionImageName: String, finishedTitle: String, finishedImageName: String, shape: ButtonShape, finishedAction: @escaping () -> Void) {
+        self.actionTitle = actionTitle
+        self.actionImageName = actionImageName
+        self.finishedTitle = finishedTitle
+        self.finishedImageName = finishedImageName
+        self.finishedAction = finishedAction
+        self.buttonShape = shape
+    }
+    
+    @State private var trigger = false
+    @State private var hasBeenTriggered = false
+        
+    private var longestTitle: String {
+        actionTitle.count > finishedTitle.count ? actionTitle : finishedTitle
+    }
+    
+    private var buttonTextColor: Color {
+        #if canImport(UIKit)
+        Color(uiColor: .systemBackground)
+        #elseif canImport(AppKit)
+        Color(nsColor: .selectedControlTextColor)
+        #endif
+    }
+    
+    var body: some View {
+        Toggle(isOn: $trigger) {
+            Label {
+                ZStack(alignment: .leading) {
+                    Text(trigger ? finishedTitle : actionTitle)
+                    // ensure that the size of this part is alwasy the same
+                    // so make sure that it's big enough
+                    // to contain either string safely
+                    Text(longestTitle)
+                        .padding(longestTitle == finishedTitle ? .none : .trailing)
+                        .hidden()
+                }
+            } icon: {
+                Image(systemName: trigger ? finishedImageName: actionImageName)
+            }
+        }
+        .padding(.horizontal)
+        
+        .toggleStyle(SingleUseToggleButtonStyle())
+        .foregroundStyle(
+            LinearGradient(
+                stops: [
+                    .init(color: .accentColor, location: 0),
+                    .init(color: hasBeenTriggered ? .accentColor : buttonTextColor, location: hasBeenTriggered ? 1 : 0),
+                    .init(color: buttonTextColor, location: 1)
+                ],
+                startPoint: .topLeading,
+                endPoint: .topTrailing
+            )
+        )
+        .background {
+            buttonShape.fill(
+                LinearGradient(
+                    stops: [
+                        .init(color: .clear, location: 0),
+                        .init(color: hasBeenTriggered ? .clear : .accentColor, location: hasBeenTriggered ? 1 : 0),
+                        .init(color: .accentColor, location: 1)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .topTrailing
+                )
+            )
+        }
+        .contentTransition(.symbolEffect(.replace))
+        .onChange(of: trigger) { _, _ in
+            guard !hasBeenTriggered else {
+                trigger = true
+                return
+            }
+            finishedAction()
+            withAnimation {
+                hasBeenTriggered = true
+            }
+        }
+        .accessibilityLabel(hasBeenTriggered ? finishedTitle : "\(actionTitle) button")
+    }
+}
+
+@available(iOS 15.0, macOS 14.0, *)
+extension SingleUseButton where ButtonShape == ButtonBorderShape {
+    init(actionTitle: String, actionImageName: String, finishedTitle: String, finishedImageName: String, finishedAction: @escaping () -> Void) {
+        self.actionTitle = actionTitle
+        self.actionImageName = actionImageName
+        self.finishedTitle = finishedTitle
+        self.finishedImageName = finishedImageName
+        self.finishedAction = finishedAction
+        self.buttonShape = .buttonBorder
+    }
+}
+
+@available(iOS 15.0, macOS 14.0, *)
+struct SingleUseToggleButtonStyle: ToggleStyle {
+    
+    func makeBody(configuration: Configuration) -> some View {
+        Button {
+            configuration.isOn.toggle()
+        } label: {
+            configuration.label
+                .padding(.leading)
+//                .padding(.vertical)
+        }
+        .buttonStyle(.borderless)
+    }
+    
+}
+
+@available(iOS 15.0, macOS 14.0, *)
+#Preview {
+    VStack(spacing: 55) {
+        SingleUseButton(
+            actionTitle: "Bookmark",
+            actionImageName: "bookmark",
+            finishedTitle: "Bookmarked",
+            finishedImageName: "checkmark"
+        ) {
+            print("bookmark button was pressed")
+        }
+        .foregroundStyle(Color.accentColor)
+        .font(.largeTitle)
+        
+        SingleUseButton(actionTitle: "Where Am I?", actionImageName: "location.magnifyingglass", finishedTitle: "I am here", finishedImageName: "globe") {
+            print("bookmark button was pressed")
+        }
+        .foregroundStyle(Color.accentColor)
+        .font(.largeTitle)
+        
+        SingleUseButton(actionTitle: "Who's your Daddy?", actionImageName: "location.magnifyingglass", finishedTitle: "me", finishedImageName: "globe") {
+            print("bookmark button was pressed")
+        }
+        .foregroundStyle(Color.accentColor)
+        .font(.largeTitle)
+        
+        SingleUseButton(actionTitle: "What time is it?", actionImageName: "", finishedTitle: "4:30", finishedImageName: "") {
+            print("bookmark button was pressed")
+        }
+        .foregroundStyle(Color.accentColor)
+        .font(.largeTitle)
+        
+    }
+    .padding(.vertical)
+}
+
