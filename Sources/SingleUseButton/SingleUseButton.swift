@@ -152,7 +152,8 @@ struct SingleUseToggleButtonStyle: ToggleStyle {
         .foregroundStyle(Color.accentColor)
         .font(.largeTitle)
         
-        SingleUseButton(actionTitle: "Where Am I?", actionImageName: "location.magnifyingglass", finishedTitle: "I am here", finishedImageName: "globe") {
+        SingleUseButton(actionTitle: "Where Am I?", actionImageName: "location.magnifyingglass", finishedTitle: "I am here", finishedImageName: "globe",
+                        shape: Capsule()) {
             print("bookmark button was pressed")
         }
         .foregroundStyle(Color.accentColor)
