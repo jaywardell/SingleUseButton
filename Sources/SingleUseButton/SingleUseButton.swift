@@ -28,6 +28,9 @@ struct SingleUseButton<ButtonShape: Shape>: View {
     
     let buttonShape: ButtonShape
     
+    @ScaledMetric var horizontalPadding = 3
+    @ScaledMetric var verticalPadding = 3
+
     /// Create a SingleUseButton
     /// - Parameters:
     ///   - actionTitle: the title of the button before it's pressed
@@ -76,13 +79,16 @@ struct SingleUseButton<ButtonShape: Shape>: View {
                     // so make sure that it's big enough
                     // to contain either string safely
                     Text(longestTitle)
-                        .padding(longestTitle == finishedTitle ? .none : .trailing)
+                        .padding(longestTitle == finishedTitle ? .none : .trailing, horizontalPadding)
                         .hidden()
                 }
             } icon: {
                 Image(systemName: trigger ? finishedImageName: actionImageName)
             }
         }
+        .padding(.trailing, buttonShape is Capsule ? horizontalPadding * 3 : horizontalPadding)
+        .padding(.leading, buttonShape is Capsule ? 0 : horizontalPadding)
+        .padding(.vertical, buttonShape is Capsule ? 0 : verticalPadding)
         
         .toggleStyle(SingleUseToggleButtonStyle())
         .foregroundStyle(
@@ -154,12 +160,15 @@ extension SingleUseButton where ButtonShape == ButtonBorderShape {
 @available(iOS 15.0, macOS 14.0, *)
 struct SingleUseToggleButtonStyle: ToggleStyle {
     
+    @ScaledMetric var horizontalPadding = 2
+
     func makeBody(configuration: Configuration) -> some View {
         Button {
             configuration.isOn.toggle()
         } label: {
             configuration.label
-                .padding(.leading)
+//                .padding(.leading)
+                .padding(.leading, horizontalPadding)
         }
         .buttonStyle(.borderless)
     }
@@ -201,6 +210,8 @@ struct SingleUseToggleButtonStyle: ToggleStyle {
         .font(.largeTitle)
         
     }
+    .font(.largeTitle)
+
     #if os(macOS)
     .padding()
     #endif
