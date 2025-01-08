@@ -131,7 +131,6 @@ struct SingleUseToggleButtonStyle: ToggleStyle {
         } label: {
             configuration.label
                 .padding(.leading)
-//                .padding(.vertical)
         }
         .buttonStyle(.borderless)
     }
