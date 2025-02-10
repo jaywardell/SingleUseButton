@@ -57,7 +57,9 @@ public struct SingleUseButton<ButtonShape: Shape>: View {
     
     @State private var trigger = false
     @State private var hasBeenTriggered = false
-        
+
+    @Environment(\.colorScheme) var colorScheme
+
     private var longestTitle: String {
         actionTitle.count > finishedTitle.count ? actionTitle : finishedTitle
     }
@@ -66,7 +68,7 @@ public struct SingleUseButton<ButtonShape: Shape>: View {
         #if canImport(UIKit)
         Color(uiColor: .systemBackground)
         #elseif canImport(AppKit)
-        Color(nsColor: .selectedControlTextColor)
+        Color(nsColor: colorScheme == .dark ? .selectedControlTextColor : .windowBackgroundColor)
         #endif
     }
     
